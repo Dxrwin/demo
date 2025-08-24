@@ -37,6 +37,20 @@ interface RepositorioVuelo : JpaRepository<Vuelo, Long> {
     ): List<Vuelo>
 
     @Query("""
+        SELECT v FROM Vuelo v
+        WHERE v.origen = :origen
+        ORDER BY v.fechaSalida DESC """)
+    fun obtenerVuelosPorOrigen(
+        @Param ("origen") origen: String
+    ): List<Vuelo>
+
+    @Query("""
+        SELECT v FROM Vuelo v
+        WHERE v.destino = :destino
+        ORDER BY v.fechaSalida DESC """)
+    fun obtenerVuelosPorDestino(@Param ("destino") destino: String): List<Vuelo>
+
+    @Query("""
         SELECT v FROM Vuelo v 
         WHERE v.aeronave.id = :aeronaveId 
         ORDER BY v.fechaSalida DESC

@@ -85,4 +85,14 @@ class ServicioVuelo(
     fun obtenerVuelosPorRangoFechas(fechaInicio: LocalDateTime, fechaFin: LocalDateTime): List<VueloResponse> {
         return repositorioVuelo.encontrarVuelosPorRangoFechas(fechaInicio, fechaFin).map { VueloResponse(it) }
     }
+
+
+    fun obtenerVuelosPorOrigen(origen : String): List<VueloResponse> {
+        return repositorioVuelo.obtenerVuelosPorOrigen(origen).map { VueloResponse(it) }
+    }
+    fun obtenerVuelosPorDestino(destino : String): List<VueloResponse> {
+        return repositorioVuelo.obtenerVuelosPorDestino(destino).map { VueloResponse(it) }
+    }
+
+
 }

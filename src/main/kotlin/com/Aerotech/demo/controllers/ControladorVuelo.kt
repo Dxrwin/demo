@@ -77,4 +77,23 @@ class ControladorVuelo(
         val vuelos = servicioVuelo.obtenerVuelosPorRangoFechas(fechaInicio, fechaFin)
         return ResponseEntity.ok(RespuestaApi.exitoso(vuelos))
     }
+
+    @GetMapping("/buscar-origen/{origen}")
+    @Operation(summary = "Obtener vuelos por ciudad de origen")
+    fun obtenerVuelosPorOrigen(
+        @PathVariable origen: String
+    ): ResponseEntity<RespuestaApi<List<VueloResponse>>> {
+        val vuelos = servicioVuelo.obtenerVuelosPorOrigen(origen)
+        return ResponseEntity.ok(RespuestaApi.exitoso(vuelos))
+    }
+
+    @GetMapping("/buscar-destino/{destino}")
+    @Operation(summary = "Obtener vuelos por ciudad de destino")
+    fun obtenerVuelosPorDestino(
+        @PathVariable destino: String
+    ): ResponseEntity<RespuestaApi<List<VueloResponse>>> {
+        val vuelos = servicioVuelo.obtenerVuelosPorDestino(destino)
+        return ResponseEntity.ok(RespuestaApi.exitoso(vuelos))
+    }
+
 }

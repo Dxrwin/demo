@@ -19,12 +19,13 @@ class ControladorReserva(
     private val servicioReserva: ServicioReserva
 ) {
 
-    @PostMapping
+    @PostMapping("/reserva/{id_cliente}")
     @Operation(summary = "Crear nueva reserva", description = "Para clientes autenticados")
     fun crearReserva(
         @Valid @RequestBody request: CrearReservaRequest,
-        @RequestHeader("X-Usuario-Id") clienteId: Long
+        @PathVariable("id_cliente") clienteId: Long
     ): ResponseEntity<RespuestaApi<ReservaResponse>> {
+        print(clienteId)
         val reserva = servicioReserva.crearReserva(request, clienteId)
         return ResponseEntity.status(HttpStatus.CREATED)
             .body(RespuestaApi.exitoso(reserva, "Reserva creada exitosamente"))
@@ -37,9 +38,9 @@ class ControladorReserva(
         return ResponseEntity.ok(RespuestaApi.exitoso(reservas))
     }
 
-    @GetMapping("/mis-reservas")
+    @GetMapping("/mis-reservas/{id_cliente}")
     @Operation(summary = "Obtener reservas del cliente autenticado")
-    fun obtenerMisReservas(@RequestHeader("X-Usuario-Id") clienteId: Long): ResponseEntity<RespuestaApi<List<ReservaResponse>>> {
+    fun obtenerMisReservas(@PathVariable("id_cliente") clienteId: Long): ResponseEntity<RespuestaApi<List<ReservaResponse>>> {
         val reservas = servicioReserva.obtenerReservasPorCliente(clienteId)
         return ResponseEntity.ok(RespuestaApi.exitoso(reservas))
     }
@@ -58,11 +59,11 @@ class ControladorReserva(
         return ResponseEntity.ok(RespuestaApi.exitoso(reservas))
     }
 
-    @PutMapping("/{id}/cancelar")
+    @PutMapping("/{id_cliente}/cancelar/{id}")
     @Operation(summary = "Cancelar reserva")
     fun cancelarReserva(
         @PathVariable id: Long,
-        @RequestHeader("X-Usuario-Id") clienteId: Long
+        @PathVariable("id_cliente") clienteId: Long
     ): ResponseEntity<RespuestaApi<ReservaResponse>> {
         val reserva = servicioReserva.cancelarReserva(id, clienteId)
         return ResponseEntity.ok(RespuestaApi.exitoso(reserva, "Reserva cancelada exitosamente"))

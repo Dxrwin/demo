@@ -40,8 +40,7 @@ data class Usuario(
     @OneToMany(mappedBy = "cliente", cascade = [CascadeType.ALL])
     @JsonIgnore
     val reservas: List<Reserva> = emptyList()
-)
-/*{
+) {
     constructor() : this(
         id = null,
         correo = "",
@@ -51,4 +50,4 @@ data class Usuario(
         fechaCreacion = LocalDateTime.now(),
         reservas = emptyList()
     )
-}*/
+}
