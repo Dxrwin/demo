@@ -58,12 +58,16 @@ class ControladorVuelo(
         return ResponseEntity.ok(RespuestaApi.exitoso(vuelos))
     }
 
-    @PutMapping("/{id}/estado")
+
+    @PutMapping("actualizar-estado/{id}/{request}")
     @Operation(summary = "Actualizar estado de vuelo", description = "Solo para empleados y administradores")
     fun actualizarEstadoVuelo(
         @PathVariable id: Long,
-        @Valid @RequestBody request: ActualizarEstadoVueloRequest
+        @PathVariable request: EstadoVuelo
     ): ResponseEntity<RespuestaApi<VueloResponse>> {
+
+        println("Actualizando estado del vuelo con ID: $id a ${request}")
+        println("Request recibido: $request")
         val vuelo = servicioVuelo.actualizarEstadoVuelo(id, request)
         return ResponseEntity.ok(RespuestaApi.exitoso(vuelo, "Estado de vuelo actualizado"))
     }
@@ -94,6 +98,25 @@ class ControladorVuelo(
     ): ResponseEntity<RespuestaApi<List<VueloResponse>>> {
         val vuelos = servicioVuelo.obtenerVuelosPorDestino(destino)
         return ResponseEntity.ok(RespuestaApi.exitoso(vuelos))
+    }
+
+    @PutMapping("/{id}")
+    @Operation(summary = "Actualizar datos de vuelo", description = "Solo para empleados y administradores")
+    fun actualizarVuelo(
+        @PathVariable id: Long,
+        @Valid @RequestBody request: ActualizarVueloRequest
+    ): ResponseEntity<RespuestaApi<VueloResponse>> {
+        val vueloActualizado = servicioVuelo.actualizarVuelo(id, request)
+        return ResponseEntity.ok(RespuestaApi.exitoso(vueloActualizado, "Vuelo actualizado"))
+    }
+
+    @GetMapping("/{id}/pasajeros")
+    @Operation(summary = "Ver información de pasajeros por vuelo")
+    fun verPasajerosPorVuelo(
+        @PathVariable id: Long
+    ): ResponseEntity<RespuestaApi<List<PasajeroResponse>>> {
+        val pasajeros = servicioVuelo.obtenerPasajerosPorVuelo(id)
+        return ResponseEntity.ok(RespuestaApi.exitoso(pasajeros, "Pasajeros del vuelo"))
     }
 
 }

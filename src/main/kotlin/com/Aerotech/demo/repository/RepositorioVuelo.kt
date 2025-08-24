@@ -12,6 +12,7 @@ import java.util.*
 interface RepositorioVuelo : JpaRepository<Vuelo, Long> {
     fun findByNumeroVuelo(numeroVuelo: String): Optional<Vuelo>
     fun findByEstado(estado: EstadoVuelo): List<Vuelo>
+    override fun findById(id: Long): Optional<Vuelo>
 
     @Query("""
         SELECT v FROM Vuelo v 

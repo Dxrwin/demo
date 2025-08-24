@@ -1,17 +1,14 @@
 package com.Aerotech.demo.services
 
 import VueloResponse
-import com.Aerotech.demo.dto.*
 import com.Aerotech.demo.dto.requests.*
-import com.Aerotech.demo.dto.responses.*
+import com.Aerotech.demo.dto.responses.PasajeroResponse
 import com.Aerotech.demo.entities.*
 import com.Aerotech.demo.repository.*
-import com.Aerotech.demo.Exception.*
+import jakarta.persistence.EntityNotFoundException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.math.BigDecimal
 import java.time.LocalDateTime
-import java.util.*
 
 @Service
 @Transactional
@@ -51,13 +48,37 @@ class ServicioVuelo(
         return VueloResponse(vueloGuardado)
     }
 
-    fun actualizarEstadoVuelo(vueloId: Long, request: ActualizarEstadoVueloRequest): VueloResponse {
+    fun actualizarEstadoVuelo(vueloId: Long, request : EstadoVuelo): VueloResponse {
         val vuelo = repositorioVuelo.findById(vueloId)
             .orElseThrow { RecursoNoEncontradoException("Vuelo no encontrado con ID: $vueloId") }
 
-        val vueloActualizado = vuelo.copy(estado = request.estado)
+        val vueloActualizado = vuelo.copy(estado = request)
         val vueloGuardado = repositorioVuelo.save(vueloActualizado)
         return VueloResponse(vueloGuardado)
+    }
+
+    fun actualizarVuelo(id: Long, request: ActualizarVueloRequest): VueloResponse {
+        val vuelo = repositorioVuelo.findById(id)
+            .orElseThrow { EntityNotFoundException("Vuelo no encontrado con id: $id") }
+
+        val vueloActualizado = vuelo.copy(
+            origen = request.origen,
+            destino = request.destino,
+            fechaSalida = request.fechaSalida,
+            fechaLlegada = request.fechaLlegada,
+            precio = request.precio
+        )
+
+        val vueloGuardado = repositorioVuelo.save(vueloActualizado)
+        return VueloResponse(vueloGuardado)
+    }
+
+    fun obtenerPasajerosPorVuelo(id: Long): List<PasajeroResponse> {
+        val vuelo = repositorioVuelo.findById(id)
+            .orElseThrow { EntityNotFoundException("Vuelo no encontrado con id: $id") }
+        return vuelo.reservas
+            .flatMap { it.pasajeros }
+            .map { PasajeroResponse(it) }
     }
 
     fun buscarVuelos(request: BuscarVuelosRequest): List<VueloResponse> {
