@@ -31,7 +31,7 @@ class ControladorReserva(
             .body(RespuestaApi.exitoso(reserva, "Reserva creada exitosamente"))
     }
 
-    @GetMapping
+    @GetMapping("/todas")
     @Operation(summary = "Obtener todas las reservas", description = "Para empleados y administradores")
     fun obtenerTodasLasReservas(): ResponseEntity<RespuestaApi<List<ReservaResponse>>> {
         val reservas = servicioReserva.obtenerTodasLasReservas()
@@ -59,7 +59,7 @@ class ControladorReserva(
         return ResponseEntity.ok(RespuestaApi.exitoso(reservas))
     }
 
-    @PutMapping("/{id_cliente}/cancelar/{id}")
+    @PutMapping("/cancelar/{id_cliente}/{id}")
     @Operation(summary = "Cancelar reserva")
     fun cancelarReserva(
         @PathVariable id: Long,

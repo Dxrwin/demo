@@ -22,7 +22,7 @@ class ControladorVuelo(
     private val servicioVuelo: ServicioVuelo
 ) {
 
-    @PostMapping
+    @PostMapping("/crear")
     @Operation(summary = "Crear nuevo vuelo", description = "Solo para empleados y administradores")
     fun crearVuelo(@Valid @RequestBody request: CrearVueloRequest): ResponseEntity<RespuestaApi<VueloResponse>> {
         val vuelo = servicioVuelo.crearVuelo(request)
@@ -30,7 +30,7 @@ class ControladorVuelo(
             .body(RespuestaApi.exitoso(vuelo, "Vuelo creado exitosamente"))
     }
 
-    @GetMapping
+    @GetMapping("/consultar-todos")
     @Operation(summary = "Obtener todos los vuelos")
     fun obtenerTodosLosVuelos(): ResponseEntity<RespuestaApi<List<VueloResponse>>> {
         val vuelos = servicioVuelo.obtenerTodosLosVuelos()
@@ -100,7 +100,7 @@ class ControladorVuelo(
         return ResponseEntity.ok(RespuestaApi.exitoso(vuelos))
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/actualizar/{id}")
     @Operation(summary = "Actualizar datos de vuelo", description = "Solo para empleados y administradores")
     fun actualizarVuelo(
         @PathVariable id: Long,
@@ -110,7 +110,7 @@ class ControladorVuelo(
         return ResponseEntity.ok(RespuestaApi.exitoso(vueloActualizado, "Vuelo actualizado"))
     }
 
-    @GetMapping("/{id}/pasajeros")
+    @GetMapping("/consultar-pasajeros/{id}")
     @Operation(summary = "Ver información de pasajeros por vuelo")
     fun verPasajerosPorVuelo(
         @PathVariable id: Long

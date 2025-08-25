@@ -11,7 +11,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/usuarios")
+@RequestMapping("/admin")
 @Tag(name = "Usuarios", description = "Gestión de usuarios del sistema")
 class ControladorUsuario(
     private val servicioUsuario: ServicioUsuario
