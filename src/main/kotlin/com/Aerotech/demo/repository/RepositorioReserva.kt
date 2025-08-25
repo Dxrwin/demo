@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
+import java.math.BigDecimal
 import java.time.LocalDateTime
 import java.util.*
 
@@ -13,6 +14,27 @@ interface RepositorioReserva : JpaRepository<Reserva, Long> {
     fun findByCodigoReserva(codigoReserva: String): Optional<Reserva>
     fun findByClienteId(clienteId: Long): List<Reserva>
     fun findByEstado(estado: EstadoReserva): List<Reserva>
+
+
+    @Query("SELECT COUNT(r) FROM Reserva r WHERE r.estado = 'COMPLETADA'")
+    fun contarReservasCompletadas(): Long
+
+    @Query("""
+    SELECT COALESCE(SUM(r.montoTotal), 0)
+    FROM Reserva r
+    WHERE r.fechaReserva BETWEEN :inicioMes AND :finMes
+""")
+    fun calcularGananciasMesActual(
+        @Param("inicioMes") inicioMes: LocalDateTime,
+        @Param("finMes") finMes: LocalDateTime
+    ): BigDecimal
+
+    @Query(""" 
+        SELECT COUNT(DISTINCT r.vuelo.id) 
+        FROM Reserva r 
+        WHERE r.estado = :estado
+    """)
+    fun countDistinctByEstado(@Param("estado") estado: EstadoReserva): Long
 
     @Query("""
         SELECT r FROM Reserva r 

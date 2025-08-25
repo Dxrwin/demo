@@ -9,7 +9,9 @@ import com.Aerotech.demo.Exception.*
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.math.BigDecimal
+import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.LocalTime
 import java.util.*
 
 @Service
@@ -17,6 +19,15 @@ import java.util.*
 class ServicioAeronave(
     private val repositorioAeronave: RepositorioAeronave
 ) {
+
+    fun obtenerAeronavesDisponiblesHoy(): List<AeronaveResponse> {
+        val hoy = LocalDate.now()
+        val inicioDia = hoy.atStartOfDay()
+        val finDia = hoy.atTime(LocalTime.MAX)
+
+        val disponibles = repositorioAeronave.encontrarAeronavesDisponibles(inicioDia, finDia)
+        return disponibles.map { AeronaveResponse(it) }
+    }
 
     fun crearAeronave(request: CrearAeronaveRequest): AeronaveResponse {
         if (repositorioAeronave.existsByModelo(request.modelo)) {

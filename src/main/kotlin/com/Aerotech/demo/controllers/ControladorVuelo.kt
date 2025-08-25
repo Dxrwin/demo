@@ -22,7 +22,23 @@ class ControladorVuelo(
     private val servicioVuelo: ServicioVuelo
 ) {
 
-    @PostMapping("/crear")
+
+    @GetMapping("/consultar-programados-retrasados-dashboard")
+    @Operation(summary = "Obtener vuelos PROGRAMADOS o RETRASADOS ordenados por salida")
+    fun obtenerVuelosProgramadosORetrasadosOrdenados(): ResponseEntity<RespuestaApi<List<VueloResponse>>> {
+        val vuelos = servicioVuelo.obtenerVuelosProgramadosORetrasadosOrdenados()
+        return ResponseEntity.ok(RespuestaApi.exitoso(vuelos))
+    }
+
+    @GetMapping("/consultar-programados-retrasados")
+    @Operation(summary = "Obtener vuelos en estado PROGRAMADO o RETRASADO")
+    fun obtenerVuelosProgramadosORetrasados(): ResponseEntity<RespuestaApi<List<VueloResponse>>> {
+        val vuelos = servicioVuelo.obtenerVuelosProgramadosORetrasados()
+        return ResponseEntity.ok(RespuestaApi.exitoso(vuelos))
+    }
+
+
+        @PostMapping("/crear")
     @Operation(summary = "Crear nuevo vuelo", description = "Solo para empleados y administradores")
     fun crearVuelo(@Valid @RequestBody request: CrearVueloRequest): ResponseEntity<RespuestaApi<VueloResponse>> {
         val vuelo = servicioVuelo.crearVuelo(request)
@@ -118,5 +134,15 @@ class ControladorVuelo(
         val pasajeros = servicioVuelo.obtenerPasajerosPorVuelo(id)
         return ResponseEntity.ok(RespuestaApi.exitoso(pasajeros, "Pasajeros del vuelo"))
     }
+
+    @GetMapping("/contar-vuelos-programados")
+    @Operation(summary = "Obtener vuelos programados", description = "Solo para programados")
+    fun obtenerProgramados(): ResponseEntity<RespuestaApi<Long>> {
+        val vuelos = servicioVuelo.obtenerVuelosProgramados()
+        return ResponseEntity.ok(RespuestaApi.exitoso(vuelos, "Vuelos programados"))
+    }
+
+
+
 
 }

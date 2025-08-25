@@ -10,6 +10,7 @@ import jakarta.validation.Valid
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
+import java.math.BigDecimal
 import java.time.LocalDateTime
 
 @RestController
@@ -18,6 +19,27 @@ import java.time.LocalDateTime
 class ControladorReserva(
     private val servicioReserva: ServicioReserva
 ) {
+
+    @GetMapping("/contar-reservas-completadas")
+    @Operation(summary = "Obtener cantidad de reservas completadas", description = "Solo para empleados y administradores")
+    fun obtenerReservasCompletadas(): ResponseEntity<RespuestaApi<Long>> {
+        val reservas = servicioReserva.contarReservasCompletadas()
+        return ResponseEntity.ok(RespuestaApi.exitoso(reservas, "Reservas completadas"))
+    }
+
+    @GetMapping("/ganancias-mes")
+    @Operation(summary = "Obtener total de ganancias del mes actual", description = "Solo para empleados y administradores")
+    fun obtenerGananciasMesActual(): ResponseEntity<RespuestaApi<BigDecimal>> {
+        val ganancias = servicioReserva.calcularGananciasMesActual()
+        return ResponseEntity.ok(RespuestaApi.exitoso(ganancias, "Ganancias del mes actual"))
+    }
+
+    @GetMapping("/contar-reservas-activas")
+    @Operation(summary = "Obtener vuelos con reservas activas", description = "Solo para empleados y administradores")
+    fun obtenerVuelosConReservasActivas(): ResponseEntity<RespuestaApi<Long>> {
+        val vuelos = servicioReserva.contarReservasActivas()
+        return ResponseEntity.ok(RespuestaApi.exitoso(vuelos, "Vuelos con reservas activas"))
+    }
 
     @PostMapping("/reserva/{id_cliente}")
     @Operation(summary = "Crear nueva reserva", description = "Para clientes autenticados")

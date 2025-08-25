@@ -9,7 +9,9 @@ import com.Aerotech.demo.Exception.*
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.math.BigDecimal
+import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.LocalTime
 import java.util.*
 
 
@@ -21,6 +23,22 @@ class ServicioReserva(
     private val repositorioUsuario: RepositorioUsuario,
     private val repositorioPasajero: RepositorioPasajero
 ) {
+
+    fun contarReservasCompletadas(): Long {
+        return repositorioReserva.contarReservasCompletadas()
+    }
+
+    fun calcularGananciasMesActual(): BigDecimal {
+        val hoy = LocalDate.now()
+        val inicioMes = hoy.withDayOfMonth(1).atStartOfDay()
+        val finMes = hoy.withDayOfMonth(hoy.lengthOfMonth()).atTime(LocalTime.MAX)
+
+        return repositorioReserva.calcularGananciasMesActual(inicioMes, finMes)
+    }
+
+    fun contarReservasActivas(): Long {
+          return repositorioReserva.countDistinctByEstado(EstadoReserva.CONFIRMADA)
+    }
 
     fun crearReserva(request: CrearReservaRequest, clienteId: Long): ReservaResponse {
         val vuelo = repositorioVuelo.findById(request.vueloId)

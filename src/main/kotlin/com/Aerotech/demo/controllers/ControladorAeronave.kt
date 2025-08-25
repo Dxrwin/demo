@@ -18,6 +18,12 @@ import org.springframework.web.bind.annotation.*
 class ControladorAeronave(
     private val servicioAeronave: ServicioAeronave
 ) {
+    @GetMapping("/disponibles-hoy")
+    @Operation(summary = "Obtener aeronaves disponibles hoy")
+    fun obtenerAeronavesDisponibles(): ResponseEntity<RespuestaApi<List<AeronaveResponse>>> {
+        val disponibles = servicioAeronave.obtenerAeronavesDisponiblesHoy()
+        return ResponseEntity.ok(RespuestaApi.exitoso(disponibles))
+    }
 
     @PostMapping
     @Operation(summary = "Crear nueva aeronave", description = "Solo para administradores")

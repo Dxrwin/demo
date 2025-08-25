@@ -14,6 +14,33 @@ interface RepositorioVuelo : JpaRepository<Vuelo, Long> {
     fun findByEstado(estado: EstadoVuelo): List<Vuelo>
     override fun findById(id: Long): Optional<Vuelo>
 
+
+    @Query("""
+    SELECT v 
+    FROM Vuelo v 
+    WHERE v.estado IN (:estados)
+    ORDER BY v.fechaSalida ASC
+""")
+    fun encontrarVuelosProgramadosORetrasadosOrdenados(
+        @Param("estados") estados: List<EstadoVuelo>
+    ): List<Vuelo>
+
+
+    @Query("SELECT v FROM Vuelo v WHERE v.estado IN (:estados)")
+    fun encontrarVuelosPorEstados(@Param("estados") estados: List<EstadoVuelo>): List<Vuelo>
+
+
+    @Query("""
+    SELECT COUNT(v) 
+    FROM Vuelo v 
+    WHERE v.estado = 'PROGRAMADO'
+      AND v.fechaSalida BETWEEN :inicioDia AND :finDia
+""")
+    fun contarVuelosProgramados(
+        @Param("inicioDia") inicioDia: LocalDateTime,
+        @Param("finDia") finDia: LocalDateTime
+    ): Long
+
     @Query("""
         SELECT v FROM Vuelo v 
         WHERE LOWER(v.origen) = LOWER(:origen) 

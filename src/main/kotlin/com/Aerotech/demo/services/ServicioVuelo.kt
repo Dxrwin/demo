@@ -8,7 +8,9 @@ import com.Aerotech.demo.repository.*
 import jakarta.persistence.EntityNotFoundException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.LocalTime
 
 @Service
 @Transactional
@@ -16,6 +18,18 @@ class ServicioVuelo(
     private val repositorioVuelo: RepositorioVuelo,
     private val repositorioAeronave: RepositorioAeronave
 ) {
+
+    fun obtenerVuelosProgramadosORetrasadosOrdenados(): List<VueloResponse> {
+        val estados = listOf(EstadoVuelo.PROGRAMADO, EstadoVuelo.RETRASADO)
+        val vuelos = repositorioVuelo.encontrarVuelosProgramadosORetrasadosOrdenados(estados)
+        return vuelos.map { VueloResponse(it) }
+    }
+
+    fun obtenerVuelosProgramadosORetrasados(): List<VueloResponse> {
+        val estados = listOf(EstadoVuelo.PROGRAMADO, EstadoVuelo.RETRASADO)
+        val vuelos = repositorioVuelo.encontrarVuelosPorEstados(estados)
+        return vuelos.map { VueloResponse(it) }
+    }
 
     fun crearVuelo(request: CrearVueloRequest): VueloResponse {
         // Validaciones de reglas de negocio
@@ -114,6 +128,17 @@ class ServicioVuelo(
     fun obtenerVuelosPorDestino(destino : String): List<VueloResponse> {
         return repositorioVuelo.obtenerVuelosPorDestino(destino).map { VueloResponse(it) }
     }
+
+    fun  obtenerVuelosProgramados(): Long{
+        val hoy = LocalDate.now()
+        val inicioDia = hoy.atStartOfDay()                // 2025-08-24T00:00:00
+        val finDia = hoy.atTime(LocalTime.MAX)            // 2025-08-24T23:59:59.999999999
+
+        val cantidad = repositorioVuelo.contarVuelosProgramados(inicioDia, finDia)
+        return cantidad
+    }
+
+
 
 
 }

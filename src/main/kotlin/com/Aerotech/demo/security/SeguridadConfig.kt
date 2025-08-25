@@ -20,21 +20,29 @@ class SeguridadConfig(
 
 
 
+
                     .requestMatchers("/vuelos/crear",
                                                    "/vuelos/actualizar/{id}/{request}",
                                                     "/vuelos/consultar-todos",
                                                         "/reservas/todas",
                                                          "/vuelos/actualizar-estado/{id}/{request}",
-                                                            "/vuelos/consultar-pasajeros").hasRole("EMPLEADO")
+                                                            "/vuelos/consultar-pasajeros",
+                                                                "/vuelos/actualizar/{id}",
+                                                                    "vuelos/contar-vuelos-programados",
+                                                                    "/reservas/contar-reservas-completadas",
+                                                                    "vuelos/consultar-programados-retrasados",
+                                                                    "/aeronaves/disponibles-hoy",
+                                                                        "/vuelos/consultar-programados-retrasados-dashboard").hasAnyRole("EMPLEADO","ADMINISTRADOR")
 
                     .requestMatchers("/vuelos/buscar-origen/{origen}",
                                                   "/vuelos/buscar-destino/{destino}",
                                                   "/vuelos/rango-fechas/{fechaInicio}/{fechaFin}",
                                                     "/reservas/reserva/{id_cliente}",
                                                     "/reservas/mis-reservas/{id_cliente}",
-                                                    "/reservas/cancelar/{id_cliente}/{id}").hasRole("CLIENTE")
+                                                    "/reservas/cancelar/{id_cliente}/{id}").hasAnyRole("CLIENTE","ADMINISTRADOR")
 
                     .requestMatchers("/**").hasRole("ADMINISTRADOR")
+
 
                     .anyRequest().authenticated()
             }
