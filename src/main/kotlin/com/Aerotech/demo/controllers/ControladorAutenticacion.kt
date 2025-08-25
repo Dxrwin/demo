@@ -31,7 +31,9 @@ class ControladorAutenticacion(
     @Operation(summary = "Iniciar sesión")
     fun iniciarSesion(@Valid @RequestBody request: IniciarSesionRequest): ResponseEntity<RespuestaApi<Map<String, Any>>> {
         val usuario = servicioUsuario.autenticarUsuario(request)
+        println("Usuario autenticado: $usuario") // Para propósitos de depuración
         val token = jwtUtil.generarToken(usuario.correo)
+        println("token: $token")
         println("Token generado: $token") // Para propósitos de depuración
         val response = mapOf(
             "usuario" to usuario,
