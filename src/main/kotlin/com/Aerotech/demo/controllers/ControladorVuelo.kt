@@ -122,7 +122,9 @@ class ControladorVuelo(
         @PathVariable id: Long,
         @Valid @RequestBody request: ActualizarVueloRequest
     ): ResponseEntity<RespuestaApi<VueloResponse>> {
+
         val vueloActualizado = servicioVuelo.actualizarVuelo(id, request)
+
         return ResponseEntity.ok(RespuestaApi.exitoso(vueloActualizado, "Vuelo actualizado"))
     }
 

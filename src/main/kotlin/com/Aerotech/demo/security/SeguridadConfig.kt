@@ -32,6 +32,7 @@ class SeguridadConfig(
                                                                     "/reservas/contar-reservas-completadas",
                                                                     "vuelos/consultar-programados-retrasados",
                                                                     "/aeronaves/disponibles-hoy",
+                                                                       "/vuelos/consultar-todos",
                                                                         "/vuelos/consultar-programados-retrasados-dashboard").hasAnyRole("EMPLEADO","ADMINISTRADOR")
 
                     .requestMatchers("/vuelos/buscar-origen/{origen}",
